@@ -41,7 +41,7 @@ export default function Home({ data }) {
       </div>
 
       <div className="flex flex-row flex-wrap ">
-        {results.map((article) => (
+        {results.map((article, index) => (
           <div
             key={article.publishedAt}
             className="flex flex-col items-center justify-start flex-grow w-1/5 p-4 m-4 border-2 border-gray-400 border-solid rounded-lg shadow-lg"
@@ -55,12 +55,23 @@ export default function Home({ data }) {
             )}
             <h1 className="text-2xl font-bold text-center">{article.title}</h1>
 
-            <a
-              href={article.url}
-              className="w-4/6 overflow-hidden text-center text-blue-500 whitespace-nowrap text-clip"
+            <Link
+              href={{
+                pathname: `/article/${index}`,
+                query: {
+                  title: article.title,
+                  content: article.content,
+                  url: article.url,
+                  author: article.author ? article.author : 'No Author',
+                  image: article.urlToImage ? article.urlToImage : 'No Image',
+                  date: article.publishedAt,
+                },
+              }}
             >
-              {article.url}
-            </a>
+              <a className="w-4/6 overflow-hidden text-center text-blue-500 whitespace-nowrap text-clip">
+                {article.url}
+              </a>
+            </Link>
 
             {article.author && (
               <span className="text-sm text-center">

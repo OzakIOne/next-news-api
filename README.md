@@ -15,6 +15,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
 
+## Project info
+- You need to design a news application with two tabs 
+- Home : will contain a list with infinity scroll of all news displayed in list form, with cells composed of an image, a title and the source (if information available).
+  - A sub-navigation to a detail view of a news item containing all the information you deem useful
+  - A bookmark system on the home page or in the detail view making news available offline news (images and content of the detail view).
+  - A redirection system to the full article page.
+  - A search system by various elements (title, source, language, etc...)
+- Favorites: which will list the news items you have bookmarked and allow you to delete them
+
+
+Technical stack : 
+- React
+- Axios
+- LocalStorage
+- EasyPeasy (state handling)
+- Tailwind
+- NextJS
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

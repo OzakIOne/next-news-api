@@ -1,86 +1,65 @@
-import axios from 'axios';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import { getNewsToday } from '../lib/news';
+import Layout from '../components/Layout/Layout';
+import Tabs from '../components/Tabs/Tabs';
+import Feed from '../components/Feed/Feed';
+import { useLocalStorage } from 'react-use';
 
-export async function getServerSideProps() {
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  const endpoint = `https://newsapi.org/v2/everything?q=tesla&from=${year}-${month}-${day}&sortBy=publishedAt&apiKey=${process.env.NEWS_API_KEY}`;
-  const res = await axios.get(endpoint);
+export async function getStaticProps() {
+  const articles = await getNewsToday();
   return {
     props: {
-      data: res.data,
+      articles,
     },
   };
 }
 
-export default function Home({ data }) {
-  const [results, setResults] = useState(data.articles);
+const HomePage = ({ articles }) => {
+  const [favoris, setFavoris] = useLocalStorage('articles', []);
+
+  const handleFav = (newFav) => {
+    if (favoris.find((fav) => fav.slug === newFav.slug))
+      setFavoris(favoris.filter((fav) => fav.slug !== newFav.slug));
+    else setFavoris([...favoris, newFav]);
+  };
 
   return (
-    <>
-      <Head>
-        <title>React News Api</title>
-        <meta
-          name="description"
-          content="Get latest news powered by newsapi.org"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold text-center">React News Api</h1>
+    <Layout>
+      <div className="my-8">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-4xl font-bold text-center">React News Api</h1>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <h2 className="text-2xl font-bold text-center">
+            Get latest news powered by newsapi.org
+          </h2>
+        </div>
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold text-center">
-          Get latest news powered by newsapi.org
-        </h2>
-      </div>
-
-      <div className="flex flex-row flex-wrap ">
-        {results.map((article, index) => (
-          <div
-            key={article.publishedAt}
-            className="flex flex-col items-center justify-start flex-grow w-1/5 p-4 m-4 border-2 border-gray-400 border-solid rounded-lg shadow-lg"
-          >
-            {article.urlToImage && (
-              <img
-                src={article.urlToImage}
-                alt="article image"
-                className="h-32 aspect-auto"
+      <Tabs
+        tabs={[
+          {
+            title: 'Feed',
+            content: (
+              <Feed
+                articles={articles}
+                onFav={handleFav}
+                favSlugs={favoris.map(({ slug }) => slug)}
               />
-            )}
-            <h1 className="text-2xl font-bold text-center">{article.title}</h1>
-
-            <Link
-              href={{
-                pathname: `/article/${index}`,
-                query: {
-                  title: article.title,
-                  content: article.content,
-                  url: article.url,
-                  author: article.author ? article.author : 'No Author',
-                  image: article.urlToImage ? article.urlToImage : 'No Image',
-                  date: article.publishedAt,
-                },
-              }}
-            >
-              <a className="w-4/6 overflow-hidden text-center text-blue-500 whitespace-nowrap text-clip">
-                {article.url}
-              </a>
-            </Link>
-
-            {article.author && (
-              <span className="text-sm text-center">
-                Author : {article.author}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-    </>
+            ),
+          },
+          {
+            title: 'Favoris',
+            content: (
+              <Feed
+                articles={favoris}
+                onFav={handleFav}
+                favSlugs={favoris.map(({ slug }) => slug)}
+              />
+            ),
+          },
+        ]}
+      />
+    </Layout>
   );
-}
+};
+
+export default HomePage;

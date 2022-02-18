@@ -1,0 +1,7 @@
+.Trigger[data-state='active'] {
+  @apply text-indigo-900 border-transparent;
+}
+
+.Trigger[data-state='inactive'] {
+  @apply text-gray-600 bg-gray-300 opacity-90 hover:bg-indigo-400 hover:text-indigo-700;
+}

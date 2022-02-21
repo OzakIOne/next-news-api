@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Star from '../../components/Star/Star';
+import Star from '../Star/Star';
 
-const Article = ({ article, isFav, onFav }) => {
+const ArticleCard = ({ article, isFav, onFav }) => {
   return (
     <div className="max-w-xl px-4 mx-auto my-20 aze">
       <div className="mb-6 tracking-wide bg-white rounded-lg shadow-2xl">
@@ -44,4 +44,4 @@ const Article = ({ article, isFav, onFav }) => {
     </div>
   );
 };
-export default Article;
+export default ArticleCard;

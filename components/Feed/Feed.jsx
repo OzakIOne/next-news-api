@@ -1,11 +1,11 @@
-import Article from '../Article/Article';
+import ArticleCard from '../ArticleCard/ArticleCard';
 
 export const Feed = ({ articles, isFav, onFav, favSlugs }) => {
   return (
-    <div className="flex flex-wrap justify-center ">
+    <div className="flex flex-wrap justify-center">
       {articles.map((article) => (
         <div key={article.url} className="flex flex-col items-center max-w-md ">
-          <Article
+          <ArticleCard
             article={article}
             onFav={onFav}
             isFav={favSlugs.find((slug) => article.slug === slug)}

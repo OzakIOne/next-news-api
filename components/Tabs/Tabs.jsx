@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 const Tabs = ({ tabs }) => (
   <RXTabs.Root
-    className="flex flex-col w-full bg-white shadow-sm"
+    className="flex flex-col w-full bg-white shadow-sm h-80"
     defaultValue="Feed"
     orientation="horizontal"
   >

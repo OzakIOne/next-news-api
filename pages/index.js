@@ -2,7 +2,9 @@ import { getNewsToday } from '../lib/news';
 import Layout from '../components/Layout/Layout';
 import Tabs from '../components/Tabs/Tabs';
 import Feed from '../components/Feed/Feed';
+import Search from '../components/Search/Search';
 import { useLocalStorage } from 'react-use';
+import { useState } from 'react';
 
 export async function getStaticProps() {
   const articles = await getNewsToday();
@@ -15,6 +17,7 @@ export async function getStaticProps() {
 
 const HomePage = ({ articles }) => {
   const [favoris, setFavoris] = useLocalStorage('articles', []);
+  const [search, setSearch] = useState('');
 
   const handleFav = (newFav) => {
     if (favoris.find((fav) => fav.slug === newFav.slug))
@@ -22,17 +25,21 @@ const HomePage = ({ articles }) => {
     else setFavoris([...favoris, newFav]);
   };
 
+  const filterResult = (articles) =>
+    articles.filter((article) =>
+      ['title', 'description', 'author', 'content'].some((key) =>
+        article[key]?.toLowerCase().includes(search.toLowerCase()),
+      ),
+    );
+
   return (
     <Layout>
-      <div className="my-8">
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-4xl font-bold text-center">React News Api</h1>
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-bold text-center">
-            Get latest news powered by newsapi.org
-          </h2>
-        </div>
+      <div className="flex flex-col items-center justify-center py-8">
+        <h1 className="text-4xl font-bold text-center">React News Api</h1>
+        <h2 className="text-2xl font-bold text-center">
+          Get latest news powered by newsapi.org
+        </h2>
+        <Search value={search} onChange={(val) => setSearch(val)} />
       </div>
       <Tabs
         tabs={[
@@ -40,7 +47,7 @@ const HomePage = ({ articles }) => {
             title: 'Feed',
             content: (
               <Feed
-                articles={articles}
+                articles={filterResult(articles)}
                 onFav={handleFav}
                 favSlugs={favoris.map(({ slug }) => slug)}
               />
@@ -50,7 +57,7 @@ const HomePage = ({ articles }) => {
             title: 'Favoris',
             content: (
               <Feed
-                articles={favoris}
+                articles={filterResult(favoris)}
                 onFav={handleFav}
                 favSlugs={favoris.map(({ slug }) => slug)}
               />

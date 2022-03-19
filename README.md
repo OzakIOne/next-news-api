@@ -9,6 +9,9 @@ First, run the development server:
 ```bash
 git clone https://github.com/ozakione/react-ex-1
 cd react-ex-1
+touch .env.local
+# add the line below in .env.local
+# NEWS_API_KEY=yourapikey
 npm i
 npm run dev
 ```
